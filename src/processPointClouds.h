@@ -77,12 +77,12 @@ struct KdTree
       }
     }
   
-	void insert(pcl::PointXYZI point, int id)
-	{
-		// TODO: Fill in this function to insert a new point into the tree
-		// the function should create a new node and place correctly with in the root 
-		insertHelper(&root, 0, point, id);
-	}
+void insert(pcl::PointXYZI point, int id)
+{
+	// TODO: Fill in this function to insert a new point into the tree
+	// the function should create a new node and place correctly with in the root 
+	insertHelper(&root, 0, point, id);
+}
 
 void searchHelper(pcl::PointXYZI target, Node* node, int depth, float distanceTol, std::vector<int>& ids)
 {
