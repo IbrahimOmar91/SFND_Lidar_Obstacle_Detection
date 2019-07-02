@@ -94,8 +94,8 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT
 
 
 
-template<typename PointT>
-std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::MySegmentPlane(typename pcl::PointCloud<PointT>::Ptr cloud, int maxIterations, float distanceThreshold)
+template<typename PointXYZI>
+std::pair<typename pcl::PointCloud<PointXYZI>::Ptr, typename pcl::PointCloud<PointXYZI>::Ptr> ProcessPointClouds<PointXYZI>::MySegmentPlane(typename pcl::PointCloud<PointXYZI>::Ptr cloud, int maxIterations, float distanceThreshold)
 {
     // Time segmentation process
     auto startTime = std::chrono::steady_clock::now();
@@ -183,11 +183,11 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT
     auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
     std::cout << "plane segmentation took " << elapsedTime.count() << " milliseconds" << std::endl;
 
-    std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> segResult = SeparateClouds(inliers, cloud);
+    std::pair<typename pcl::PointCloud<PointXYZI>::Ptr, typename pcl::PointCloud<PointXYZI>::Ptr> segResult = SeparateClouds(inliers, cloud);
     return segResult;
 }
 
-
+ // pcl segmentation
 template<typename PointT>
 std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::SegmentPlane(typename pcl::PointCloud<PointT>::Ptr cloud, int maxIterations, float distanceThreshold)
 {
@@ -229,7 +229,6 @@ std::pair<typename pcl::PointCloud<PointT>::Ptr, typename pcl::PointCloud<PointT
 
 // region Clustering
 
-
 template<typename PointT>
 void ProcessPointClouds<PointT>::clusterHelper(int indice, typename pcl::PointCloud<PointT>::Ptr cloud, std::vector<int>& cluster, std::vector<bool>& processed, KdTree* tree, float distanceTol)
 {
@@ -245,12 +244,12 @@ void ProcessPointClouds<PointT>::clusterHelper(int indice, typename pcl::PointCl
 	}
 }
 
-template<typename PointT>
-std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::euclideanCluster(typename pcl::PointCloud<PointT>::Ptr cloud, KdTree* tree, float distanceTol, int minSize, int maxSize)
+template<typename PointXYZI>
+std::vector<typename pcl::PointCloud<PointXYZI>::Ptr> ProcessPointClouds<PointXYZI>::euclideanCluster(typename pcl::PointCloud<PointXYZI>::Ptr cloud, KdTree* tree, float distanceTol, int minSize, int maxSize)
 {
 	// TODO: Fill out this function to return list of indices for each cluster
     auto startTime = std::chrono::steady_clock::now();
-	std::vector<typename pcl::PointCloud<PointT>::Ptr> clusters;
+	std::vector<typename pcl::PointCloud<PointXYZI>::Ptr> clusters;
 	std::vector<bool> processed(cloud->points.size(), false);
 
 	for (size_t idx = 0; idx < cloud->points.size(); ++idx)
@@ -258,7 +257,7 @@ std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::e
 		if (processed[idx] == false)
 		{
 			std::vector<int> cluster_idx;
-			typename pcl::PointCloud<PointT>::Ptr cluster(new pcl::PointCloud<PointT>);
+			typename pcl::PointCloud<PointXYZI>::Ptr cluster(new pcl::PointCloud<PointXYZI>);
 
 			clusterHelper(idx, cloud, cluster_idx, processed, tree, distanceTol);
 
@@ -294,7 +293,7 @@ std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::e
 
 // endregion
 
-
+/* // pcl Clustering 
 template<typename PointT>
 std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::Clustering(typename pcl::PointCloud<PointT>::Ptr cloud, float clusterTolerance, int minSize, int maxSize)
 {
@@ -336,13 +335,13 @@ std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::C
     return clusters;
     
 }
+*/
 
-
-template<typename PointT>
-Box ProcessPointClouds<PointT>::BoundingBox(typename pcl::PointCloud<PointT>::Ptr cluster)
+template<typename PointXYZI>
+Box ProcessPointClouds<PointXYZI>::BoundingBox(typename pcl::PointCloud<PointXYZI>::Ptr cluster)
 {
     // Find bounding box for one of the clusters
-    PointT minPoint, maxPoint;
+    PointXYZI minPoint, maxPoint;
     pcl::getMinMax3D(*cluster, minPoint, maxPoint);
 
     Box box;

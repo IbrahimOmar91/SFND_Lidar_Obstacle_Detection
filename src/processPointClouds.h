@@ -45,26 +45,33 @@ struct KdTree
 	: root(NULL)
 	{}
 
-	void insertHelper(Node** node, int depth, pcl::PointXYZI point, int id)
+	void insertHelper(Node** node, int depth, pcl::PointXYZI target, int id)
     {
       if(*node == NULL) 
-        *node = new Node(point, id);
+        *node = new Node(target, id);
       else
       {
-        uint cd = depth % 2;
+        uint cd = depth % 3;
         if(cd == 0)
         {
-            if(point.x < (*node)->point.x)
-                insertHelper(&(*node)->left, depth + 1, point, id);
+            if(target.x < (*node)->point.x)
+                insertHelper(&(*node)->left, depth + 1, target, id);
             else
-                insertHelper(&(*node)->right, depth + 1, point, id);
+                insertHelper(&(*node)->right, depth + 1, target, id);
+        }
+        else if (cd == 1)
+        {
+            if(target.y < (*node)->point.y)
+                insertHelper(&(*node)->left, depth + 1, target, id);
+            else
+                insertHelper(&(*node)->right, depth + 1, target, id);
         }
         else
         {
-            if(point.y < (*node)->point.y)
-                insertHelper(&(*node)->left, depth + 1, point, id);
+            if(target.z < (*node)->point.z)
+                insertHelper(&(*node)->left, depth + 1, target, id);
             else
-                insertHelper(&(*node)->right, depth + 1, point, id);
+                insertHelper(&(*node)->right, depth + 1, target, id);
         }
         
       }
@@ -87,21 +94,29 @@ void searchHelper(pcl::PointXYZI target, Node* node, int depth, float distanceTo
             if(distance <= distanceTol)
                 ids.push_back(node->id);
         }
-        if(depth%2 == 0)
+
+        uint cd = depth % 3;
+        if(cd == 0)
         {
             if((target.x - distanceTol) < node->point.x)
                 searchHelper(target, node->left, depth+1, distanceTol, ids);
-            if((target.x + distanceTol) > node->point.x)
+            if((target.x + distanceTol) > node->point.x) // Must be if (else and else if don't work)
                 searchHelper(target, node->right, depth+1, distanceTol, ids);
         }
-        else
+        else if (cd == 1)
         {
             if((target.y - distanceTol) < node->point.y)
                 searchHelper(target, node->left, depth+1, distanceTol, ids);
             if((target.y + distanceTol) > node->point.y)
                 searchHelper(target, node->right, depth+1, distanceTol, ids);
         }
-      
+        else
+        {
+            if((target.z - distanceTol) < node->point.z)
+                searchHelper(target, node->left, depth+1, distanceTol, ids);
+            if((target.z + distanceTol) > node->point.z)
+                searchHelper(target, node->right, depth+1, distanceTol, ids);
+        }
     }
 }
   
