@@ -12,10 +12,10 @@ In this course we will be talking about sensor fusion, whch is the process of ta
 
 ## Output
 **data_1** file:<br>
-<img src="media/001.gif" width="800" height="400" />
+<img src="media/001.gif"/>
 
 **data_2** file:<br>
-<img src="media/002.gif" width="800" height="400" />
+<img src="media/002.gif"/>
 
 ## Installation
 
