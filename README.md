@@ -10,7 +10,7 @@ In this course we will be talking about sensor fusion, whch is the process of ta
 
 **Sensor Fusion** by combing lidar's high resoultion imaging with radar's ability to measure velocity of objects we can get a better understanding of the sorrounding environment than we could using one of the sensors alone.
 
-## Output
+## Results
 **data_1** file:<br>
 <img src="media/001.gif"/>
 
