@@ -88,9 +88,9 @@ void searchHelper(pcl::PointXYZI target, Node* node, int depth, float distanceTo
 {
 	if(node != NULL)
     {
-        if((node->point.x >= (target.x-distanceTol)&&(node->point.x <= (target.x+distanceTol)))&&(node->point.y >= (target.y-distanceTol)&&(node->point.y <= (target.y+distanceTol))))
+        if((node->point.x >= (target.x-distanceTol)&&(node->point.x <= (target.x+distanceTol))) && (node->point.y >= (target.y-distanceTol)&&(node->point.y <= (target.y+distanceTol))) && (node->point.z >= (target.z-distanceTol) && (node->point.z <= (target.z+distanceTol)) ))
         {
-            float distance = sqrt((node->point.x - target.x) * (node->point.x - target.x) + (node->point.y - target.y) * (node->point.y - target.y));
+            float distance = sqrt((node->point.x - target.x) * (node->point.x - target.x) + (node->point.y - target.y) * (node->point.y - target.y) + (node->point.z - target.z) * (node->point.z - target.z));
             if(distance <= distanceTol)
                 ids.push_back(node->id);
         }
